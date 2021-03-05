@@ -27,6 +27,7 @@ class BLBParser extends Parser
       {text:"Process time", extract:path_sum_extract("process_time"), formatters:[this.f2]},
       {text:"Positive domination time", extract:path_sum_extract("positive_domination_time"), formatters:[this.f2]},
       {text:"Negative domination time", extract:path_sum_extract("negative_domination_time"), formatters:[this.f2]},
+      {text:"Merged routes", extract:path_sum_extract("merged_routes_count"), formatters:[this.f2]}
     ]));
 
     var mlb_parser = new MLBParser();
@@ -60,8 +61,8 @@ class BLBParser extends Parser
     	this.add_path_row(rows, "Screen output", obj, ["screen_output"], [this.textarea]);
 
     this.add_table_row(rows,
-      ["Time", "Status"], [
-      [obj.time, obj.status]
+      ["Time", "Status", "Merged routes", "Forward routes"], [
+      [obj.time, obj.status, obj.merged_routes_count, get_path(obj, ["forward", "routes_found_count"])]
     ]);
 
     var add_bar = (data, title, path) => {
