@@ -24,6 +24,8 @@ class MLBParser extends Parser
       {text:"#Corrected", extract:this.path_extract(["corrected_count"])},
       {text:"#Processed", extract:this.path_extract(["processed_count"])},
       {text:"#Bounded", extract:this.path_extract(["bounded_count"])},
+      {text:"#MissedBadArc", extract:this.path_extract(["bad_arcs_missed"])},
+      {text:"#MissedSDLK", extract:this.path_extract(["sdlk_missed"])},
       {text:"Queuing time", extract:this.path_extract(["queuing_time"]), formatters:[this.f2]},
       {text:"Enumeration time", extract:this.path_extract(["enumeration_time"]), formatters:[this.f2]},
       {text:"Extension time", extract:this.path_extract(["extension_time"]), formatters:[this.f2]},
@@ -33,7 +35,8 @@ class MLBParser extends Parser
       {text:"Bounding time", extract:this.path_extract(["bounding_time"]), formatters:[this.f2]},
       {text:"Positive domination time", extract:this.path_extract(["positive_domination_time"]), formatters:[this.f2]},
       {text:"Negative domination time", extract:this.path_extract(["negative_domination_time"]), formatters:[this.f2]},
-      {text:"Average length", extract:(obj) => this.pondered_average(obj.count_by_length), formatters:[this.f2]}
+      {text:"Average length", extract:(obj) => this.pondered_average(obj.count_by_length), formatters:[this.f2]},
+      {text:"Added Routes", extract:this.path_extract(["routes_found_count"])}
     ]));
     return A;
   }
@@ -93,6 +96,13 @@ class MLBParser extends Parser
     add_bar(data, "Negative", ["negative_domination_time"]);
     var domination_plot = bar_plot("Positive/Negative domination time", [data], {height:300, width:350});
     if (domination_plot != undefined) plot_row.push(domination_plot);
+
+    // #Labels plot.
+    var data = {x:[], y:[]};
+    add_bar(data, "BadArcs", ["bad_arcs_missed"]);
+    add_bar(data, "SDLK", ["sdlk_missed"]);
+    var labels_plot = bar_plot("#Missed domination by condition", [data], {height:300, width:350});
+    if (labels_plot != undefined) plot_row.push(labels_plot);
 
     this.add_flex_row(rows, plot_row);
     return rows;
